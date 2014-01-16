@@ -8,7 +8,7 @@ import re
 
 mail_file = '/Users/gregfiore/Dropbox/Projects/Email/Dashboard/Inbox/November - Jan 14.mbox/mbox'
 start_id = 0
-write_db = 0
+write_db = 1
 max_messages = 100
 
 #####################

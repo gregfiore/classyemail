@@ -63,6 +63,13 @@
             {% endif %}
             <a href="extract">Extract</a></li>
 
+            {% if current_page == 'inbox' %}
+              <li class="active">
+            {% else %}
+              <li>
+            {% endif %}
+            <a href="email">Inbox</a></li>
+
           </ul>
         </div><!--/.nav-collapse -->
       </div>
