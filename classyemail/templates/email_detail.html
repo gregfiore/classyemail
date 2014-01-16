@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% load dictionary_extras %}
+
+{% block page_content %}
+
+	<div class="col-sm-10 col-sm-offset-1">
+
+		<table class="table table-hover">
+
+			<tr>
+				<td><b>Date</b></td>
+				<td>{{ email.date }}</td>
+			</tr>
+			<tr>
+				<td><b>From</b></td>
+				<td>{{ email.sender }}</td>
+			</tr>
+			<tr>
+				<td><b>Subject</b></td>
+				<td>{{ email.subject }}</td>
+			</tr>
+			<tr>
+				<td><b>Body (Plain Text)</b></td>
+				<td>{{ email.body_plain }}</td>
+			</tr>
+			<tr>
+				<td><b>Body (HTML)</b></td>
+				<td>{{ email.body_html }}</td>
+			</tr>
+			<tr>
+				<td><b>Truth type</b></td>
+				<td>{{ email.get_truth_type }}</td>
+			</tr>
+			<tr>
+				<td><b>Auto type</b></td>
+				<td>{{ email.get_auto_type }}</td>
+			</tr>
+		</table>
+	</div>
+
+{% endblock %}

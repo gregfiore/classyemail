@@ -4,7 +4,7 @@ import psycopg2 # Python Postresql module
 import string
 import mailbox
 import re
-
+from email.header import decode_header
 
 mail_file = '/Users/gregfiore/Dropbox/Projects/Email/Dashboard/Inbox/November - Jan 14.mbox/mbox'
 start_id = 0
@@ -14,6 +14,23 @@ max_messages = 100
 #####################
 # Utility Functions #
 #####################
+
+def parse_sender(sender):
+	##############################################
+	# Function: parse_sender(sender)             #
+	# Input:  sender of email <string>           #
+	# Output:  dictionary of name, address       #
+	##############################################
+
+	output = {'name':'', 'address':''}
+	# Sender has the following format 'name' <'address'>
+
+	a = email.utils.parseaddr(sender)
+	# parseaddr returns 
+	output['name'] = a[0]
+	output['address'] = a[1]
+
+	return output
 
 def establishConnection():
 	# Connect to the database 
@@ -88,6 +105,19 @@ for idx in range(start_id, n_messages-1):
 	
 	email_data = extract_msg(mbox[idx])
 	print str(idx)
+
+	subject, encoding = decode_header(mbox[idx].get('subject'))[0]
+	if encoding == 'utf-8':
+		sender = parse_sender(mbox[idx].get('from'))
+		new_sender = decode_header(sender['name'])[0]
+		# print new_sender[0]
+		# print sender['address']
+		email_data['from'] = email.utils.formataddr((new_sender[0], sender['address']))
+
+		email_data['subject'] = subject.decode(encoding)
+		print email_data['from']
+		print email_data['subject']
+
 	
 	if write_db:
 		db_val_list = []

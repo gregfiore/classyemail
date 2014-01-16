@@ -18,6 +18,5 @@ urlpatterns = patterns('',
     url(r'^extract$','promo_app.views.extract_view'),
 
     url(r'email$', 'promo_app.views.all_email_view'),    # View to see all emails
-    url(r'email/(?<email_pk>\d+)/$', 'promo_app.view.email_detail_view'),  # View details of a specific email
-
+    url(r'email/(?P<email_pk>\d+)/$', 'promo_app.views.email_detail_view'),  # View details of a specific email
 )

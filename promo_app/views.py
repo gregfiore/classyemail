@@ -25,6 +25,12 @@ def parse_sender(sender):
 
 	return output
 
+def clean_utf8(input_string):
+	if 'utf-8' in input_string:
+		return input_string.decode('utf-8')
+	else:
+		return input_string
+
 def trim_string(og_string, max_length):
 	return (og_string[:(max_length-3)] + '...') if len(og_string) > max_length else og_string
 
@@ -66,9 +72,9 @@ def all_email_view(request):
 		
 		sender_data = parse_sender(msg.sender)
 
-		setattr(msg, 'sender', sender_data['name'])
+		setattr(msg, 'sender', trim_string(sender_data['name'],30))
 
-		new_subject = trim_string(msg.subject,50)
+		new_subject = trim_string(msg.subject,70)
 		setattr(msg, 'subject', new_subject)
 
 		all_emails.append(msg)
@@ -78,3 +84,16 @@ def all_email_view(request):
 	args['current_page'] = 'inbox'
 
 	return render(request, 'all_email.html', args)
+
+def email_detail_view(request, email_pk):
+
+	args = {}
+
+	msg = Email.objects.get(pk=email_pk)
+
+	args['email'] = msg
+
+	args['current_page'] = 'email_detail'
+
+	return render(request, 'email_detail.html', args)
+
