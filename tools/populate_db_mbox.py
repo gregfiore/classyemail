@@ -44,7 +44,7 @@ def establishConnection():
 
 def init_db_string(write_increment):
 	# Initiliaze the string to write N lines to the database
-	db_string = """INSERT INTO promo_app_email ("sender", "recipient", "date", "subject", "body_plain", "body_html") VALUES """
+	db_string = """INSERT INTO promo_app_email ("sender", "recipient", "date", "subject", "email_source", "email_key") VALUES """
 	for i in range(write_increment):
 		db_string = db_string + " (%s,%s,%s,%s,%s,%s)"
 	db_string = db_string + ";"
@@ -93,6 +93,8 @@ mbox = mailbox.mbox(mail_file)
 n_messages = len(mbox)
 print 'Found '+str(n_messages)+' messages.'
 
+mail_keys = mbox.keys()
+
 # Connect to the database
 if write_db:
 	conn = establishConnection()
@@ -102,9 +104,8 @@ for idx in range(start_id, n_messages-1):
 	if idx >= max_messages:
 		break
 
-	
 	email_data = extract_msg(mbox[idx])
-	print str(idx)
+	print str(idx) + ': Key = ' + str(mail_keys[idx])
 
 	subject, encoding = decode_header(mbox[idx].get('subject'))[0]
 	if encoding == 'utf-8':
@@ -126,8 +127,11 @@ for idx in range(start_id, n_messages-1):
 		db_val_list.append(email_data['to'])
 		db_val_list.append(clean_time(email_data['date']))
 		db_val_list.append(email_data['subject'])
-		db_val_list.append(email_data['body']['plain'])
-		db_val_list.append(email_data['body']['html'])
+		db_val_list.append(mail_file)
+		db_val_list.append(mail_keys[idx])
+
+		# db_val_list.append(email_data['body']['plain'])
+		# db_val_list.append(email_data['body']['html'])
 
 		cur = conn.cursor()
 

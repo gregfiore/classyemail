@@ -28,8 +28,8 @@ class Email(models.Model):
 	recipient = models.CharField(max_length=100)
 	date = models.DateTimeField()
 	subject = models.CharField(max_length=200)
-	body_plain = models.CharField(max_length=2000)
-	body_html = models.CharField(max_length=2000)
+	email_source = models.CharField(max_length=200)
+	email_key = models.IntegerField()
 	auto_type = models.IntegerField(null=True)
 	truth_type = models.IntegerField(null=True)
 	def get_auto_type(self):

@@ -22,11 +22,19 @@
 			</tr>
 			<tr>
 				<td><b>Body (Plain Text)</b></td>
-				<td>{{ email.body_plain }}</td>
+				<td>{{ body.plain }}</td>
+			</tr>			
+			<tr>
+				<td><b>Body (HTML)</b></td>
+				<td>{{ body.html }}</td>
 			</tr>
 			<tr>
 				<td><b>Body (HTML)</b></td>
-				<td>{{ email.body_html }}</td>
+				<td>
+					<iframe src="{{ STATIC_URL }}/msg.html">
+						
+					</iframe>
+				</td>
 			</tr>
 			<tr>
 				<td><b>Truth type</b></td>

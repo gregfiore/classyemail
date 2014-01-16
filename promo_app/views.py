@@ -3,10 +3,34 @@ from promo_app.models import Email
 
 import email
 import re
+import mailbox
 
 #####################
 # Utility functions #
 #####################
+
+def retrieve_body(msg):
+	# Input is an Email object
+	mbox = mailbox.mbox(msg.email_source)
+	full_msg = mbox.get(msg.email_key)
+
+	output = {'plain':'', 'html':''}
+
+	if full_msg.is_multipart():
+		# Most messages are multipart (i.e. plain text and html at least)
+		for part in full_msg.get_payload():
+			if 'text/plain' in part.get_content_type():
+				output['plain'] = str(part)
+			elif 'text/html' in part.get_content_type():
+				output['html'] = str(part)
+	
+	else:
+		if 'text/plain' in full_msg.get_content_type():
+			output['plain'] = str(full_msg.get_payload())
+		elif 'text/html' in full_msg.get_content_type():
+			output['html'] = str(full_msg.get_payload())
+			
+	return output
 
 def parse_sender(sender):
 	##############################################
@@ -90,6 +114,9 @@ def email_detail_view(request, email_pk):
 	args = {}
 
 	msg = Email.objects.get(pk=email_pk)
+
+	# Get the body
+	args['body'] = retrieve_body(msg)
 
 	args['email'] = msg
 
