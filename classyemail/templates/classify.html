@@ -1,6 +1,46 @@
 {% extends "base.html" %}
 
+{% load dictionary_extras %}
+
 {% block page_content %}
-	<h1>Classification Page</h1>
-	<p class="lead">This is where we will pull in emails, manually classify and test classification.</p>
+
+	<div class="pagination">
+		<span class="step-links">
+			{% if emails.has_previous %}
+				<a href="?page={{ emails.previous_page_number }}">  <<<  </a>
+			{% endif %}
+			<span class="current">
+				Page {{ emails.number }} of {{ emails.paginator.num_pages }}
+			</span>
+
+			{% if emails.has_next %}
+				<a href="?page={{ emails.next_page_number }}">  >>> </a>
+			{% endif %}
+		</span>
+	</div>
+
+	<div class="col-xs-12">
+		<table class="table table-hover">
+			<tr>
+				<th>From</th>
+				<th>Subject</th>
+				<th>Date</th>
+				<th>Set Promo</th>
+			</tr>
+		{% for email_msg in emails %}
+			{% if email_msg.get_truth_type == 'Promotion' %}
+				<tr class='success'>
+			{% else %}
+				<tr>
+			{% endif %}
+				<td>{{ email_msg.id }} - <a href="/email/{{ email_msg.id }}">{{ email_msg.sender }}</a></td>
+				<td><a href="/email/{{ email_msg.id }}">{{ email_msg.subject }}</a></td>
+				<td><a href="/email/{{ email_msg.id }}">{{ email_msg.date }}</a></td>
+				<td><a href="/email/{{ email_msg.id }}/set_promotion">
+					<button class="btn btn-primary btn-sm">Promo</button> </a></td>
+			</tr>
+		{% endfor %}
+		</table>
+	</div>
+
 {% endblock %}
